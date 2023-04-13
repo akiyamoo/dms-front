@@ -120,6 +120,7 @@ export default {
         {text: "ФИО сотрудника", value: "employeeName", sort: true, align: "center"},
         {text: "Количество", value: "amount", sort: true, align: "center"},
         {text: "Дата производства", value: "createdDate", sort: true, align: "center"},
+        {text: "Действия", value: "action", sort: true, align: "center"}
       ],
       items: [
         // TODO

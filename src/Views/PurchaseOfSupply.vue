@@ -129,6 +129,7 @@ export default {
         {text: "Количество", value: "amount", sort: true, align: "center"},
         {text: "Сумма", value: "sum", sort: true, align: "center"},
         {text: "Дата закупки", value: "createdDate", sort: true, align: "center"},
+        {text: "Действия", value: "action", sort: true, align: "center"}
       ],
       items: [
         // TODO
