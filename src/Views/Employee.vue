@@ -76,7 +76,7 @@
 
         <v-row class="justify-end">
             <v-btn class="mr-5" @click="createItem()">Создать</v-btn>
-            <v-btn>Обновить</v-btn>
+            <v-btn @click="getItems()">Обновить</v-btn>
         </v-row>
 
         <v-row>
@@ -126,6 +126,10 @@
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
     name: "Employee",
+    mounted() {
+        this.getItems();
+        this.getStaffes();
+    },
     data() {
         return {
             headers: [
@@ -138,7 +142,7 @@ export default {
                 {text: "Должность", value: "staffName", sort: true, align: "center"},
             ],
             items: [
-                {name: "Eldar", salary: 1000, createdDate: Date.now(), address: "Bishkek", phoneNumber: "+996709992536", staffName: "Admin", staffId: 1} // TODO
+                // TODO
             ],
             search: undefined,
             dialog: false,
@@ -151,10 +155,7 @@ export default {
                 staffName: undefined,
                 staffId: undefined,
             },
-            staffes: [
-                {id: 1, name: 'Admin'},
-                {id: 2, name: 'User'}
-            ]
+            staffes: []
         }
     },
     methods: {
@@ -173,6 +174,27 @@ export default {
         saveEmployee() {
             // TODO
             this.dialog = false;
+        },
+        getItems() {
+            // TODO
+            this.items = [
+                {
+                    name: "Eldar",
+                    salary: 1000,
+                    createdDate: Date.now(),
+                    address: "Bishkek",
+                    phoneNumber: "+996709992536",
+                    staffName: "Admin",
+                    staffId: 1
+                }
+            ]
+        },
+        getStaffes() {
+            // TODO
+            this.staffes = [
+                {id: 1, name: 'Admin'},
+                {id: 2, name: 'User'}
+            ]
         }
     }
 }
