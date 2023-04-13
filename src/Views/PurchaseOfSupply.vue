@@ -8,7 +8,7 @@
         <v-card>
           <v-card-title>
             <v-spacer></v-spacer>
-            <span class="text-md-h6 font-weight-bold">Создание\редактирование сырья</span>
+            <span class="text-md-h6 font-weight-bold">Форма закупки сырья</span>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-container grid-list-md>
@@ -63,7 +63,7 @@
 
     <v-row>
       <v-col md12>
-        <v-card-text align="center" class="text-h4 font-weight-bold">Форма закупки сырья</v-card-text>
+        <v-card-text align="center" class="text-h4 font-weight-bold">Закупка сырья</v-card-text>
       </v-col>
     </v-row>
 
@@ -126,8 +126,8 @@ export default {
         //{text: "ID", value: "id", sort: true, align: "center"},
         {text: "Название сырья", value: "supplyName", sort: true, align: "center"},
         {text: "ФИО сотрудника", value: "employeeName", sort: true, align: "center"},
-        {text: "Количество", value: "createdDate", sort: true, align: "center"},
-        {text: "Сумма", value: "address", sort: true, align: "center"},
+        {text: "Количество", value: "amount", sort: true, align: "center"},
+        {text: "Сумма", value: "sum", sort: true, align: "center"},
         {text: "Дата закупки", value: "createdDate", sort: true, align: "center"},
       ],
       items: [
