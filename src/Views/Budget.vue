@@ -3,12 +3,12 @@
         <div class="text-center">
             <v-dialog
                     v-model="dialog"
-                    width="25vw"
+                    width="30vw"
             >
                 <v-card>
                     <v-card-title>
                         <v-spacer></v-spacer>
-                        <span class="text-md-h5 font-weight-bold">Редактирование бюджета</span>
+                        <span class="text-md-h6 font-weight-bold">Создание\Редактирование бюджета</span>
                         <v-spacer></v-spacer>
                     </v-card-title>
                     <v-container grid-list-md>

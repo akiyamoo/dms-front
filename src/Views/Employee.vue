@@ -3,12 +3,12 @@
         <div class="text-center">
             <v-dialog
                     v-model="dialog"
-                    width="25vw"
+                    width="30vw"
             >
                 <v-card>
                     <v-card-title>
                         <v-spacer></v-spacer>
-                        <span class="text-md-h5 font-weight-bold">Создание сотрудника</span>
+                        <span class="text-md-h6 font-weight-bold">Создание\редактирование сотрудника</span>
                         <v-spacer></v-spacer>
                     </v-card-title>
                     <v-container grid-list-md>
@@ -107,8 +107,8 @@
                             <td align="center">{{ item.phoneNumber }}</td>
                             <td align="center">{{ item.staffName }}</td>
                             <td align="center">
-                                <v-btn @click="editItem(item)">
-                                    <v-icon>fas fa-edit</v-icon>
+                                <v-btn small @click="editItem(item)">
+                                    <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
                             </td>
                         </tr>
@@ -140,6 +140,7 @@ export default {
                 {text: "Адрес", value: "address", sort: true, align: "center"},
                 {text: "Номер телефона", value: "phoneNumber", sort: true, align: "center"},
                 {text: "Должность", value: "staffName", sort: true, align: "center"},
+                {text: "Действия", value: "action", sort: true, align: "center"},
             ],
             items: [
                 // TODO
