@@ -8,7 +8,7 @@
         <v-card>
           <v-card-title>
             <v-spacer></v-spacer>
-            <span class="text-md-h5 font-weight-bold">Создание\Редактирование единиц измерений</span>
+            <span class="text-md-h5 font-weight-bold">Форма единиц измерений</span>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-container grid-list-md>
@@ -17,7 +17,7 @@
                 <v-text-field
                     align="center"
                     v-model="item.name"
-                    label="Должность"
+                    label="Название типа измерения"
                     clearable
                 ></v-text-field>
               </v-col>
@@ -34,7 +34,7 @@
 
     <v-row>
       <v-col md12>
-        <v-card-text align="center" class="text-h4 font-weight-bold">Форма единиц измерений</v-card-text>
+        <v-card-text align="center" class="text-h4 font-weight-bold">Единицы измерения</v-card-text>
       </v-col>
     </v-row>
 

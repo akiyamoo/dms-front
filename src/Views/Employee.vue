@@ -8,7 +8,7 @@
                 <v-card>
                     <v-card-title>
                         <v-spacer></v-spacer>
-                        <span class="text-md-h6 font-weight-bold">Создание\редактирование сотрудника</span>
+                        <span class="text-md-h6 font-weight-bold">Форма сотрудников</span>
                         <v-spacer></v-spacer>
                     </v-card-title>
                     <v-container grid-list-md>
@@ -70,7 +70,7 @@
 
         <v-row>
             <v-col md12>
-                <v-card-text align="center" class="text-h4 font-weight-bold">Форма сотрудников</v-card-text>
+                <v-card-text align="center" class="text-h4 font-weight-bold">Сотрудники</v-card-text>
             </v-col>
         </v-row>
 

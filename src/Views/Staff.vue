@@ -8,7 +8,7 @@
         <v-card>
           <v-card-title>
             <v-spacer></v-spacer>
-            <span class="text-md-h5 font-weight-bold">Создание\Редактирование должности</span>
+            <span class="text-md-h5 font-weight-bold">Форма должности</span>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-container grid-list-md>
@@ -34,7 +34,7 @@
 
     <v-row>
       <v-col md12>
-        <v-card-text align="center" class="text-h4 font-weight-bold">Форма должностей</v-card-text>
+        <v-card-text align="center" class="text-h4 font-weight-bold">Должности</v-card-text>
       </v-col>
     </v-row>
 
