@@ -147,6 +147,7 @@ export default {
             search: undefined,
             dialog: false,
             item: {
+                id: undefined,
                 name: undefined,
                 salary: undefined,
                 createdDate: undefined,
@@ -179,6 +180,7 @@ export default {
             // TODO
             this.items = [
                 {
+                    id: 1,
                     name: "Eldar",
                     salary: 1000,
                     createdDate: Date.now(),
