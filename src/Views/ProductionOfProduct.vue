@@ -38,7 +38,7 @@
                 <v-text-field
                     align="center"
                     v-model="item.createdDate"
-                    label="Дата закупки"
+                    label="Дата производства"
                     clearable
                 >
                 </v-text-field>

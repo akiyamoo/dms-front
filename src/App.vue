@@ -45,7 +45,7 @@
         Продажа продукции
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn @click="$router.push('/salary')" small>
+      <v-btn :disabled="true" @click="$router.push('/salary')" small>
         Зарплата
       </v-btn>
       <v-spacer></v-spacer>
