@@ -1,10 +1,10 @@
 <template>
-$END$
+  <v-card-text>SaleOfProduct</v-card-text>
 </template>
 
 <script>
 export default {
-name: "SaleOfProduct"
+  name: "SaleOfProduct"
 }
 </script>
 

@@ -1,10 +1,11 @@
 <template>
-$END$
+  <v-card-text>Ingredient</v-card-text>
 </template>
 
 <script>
 export default {
-name: "Ingredient"
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: "Ingredient"
 }
 </script>
 

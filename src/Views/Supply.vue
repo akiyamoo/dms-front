@@ -1,10 +1,13 @@
 <template>
-$END$
+  <v-container grid-list-md text-xs-center>
+
+  </v-container>
 </template>
 
 <script>
 export default {
-name: "Supply"
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: "Supply"
 }
 </script>
 
