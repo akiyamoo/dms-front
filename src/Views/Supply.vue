@@ -17,7 +17,7 @@
                 <v-text-field
                     align="center"
                     v-model="item.name"
-                    label="ФИО"
+                    label="Название сырья"
                     clearable
                 >
                 </v-text-field>

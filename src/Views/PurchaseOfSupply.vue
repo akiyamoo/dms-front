@@ -63,7 +63,7 @@
 
     <v-row>
       <v-col md12>
-        <v-card-text align="center" class="text-h4 font-weight-bold">Форма сырья</v-card-text>
+        <v-card-text align="center" class="text-h4 font-weight-bold">Форма закупки сырья</v-card-text>
       </v-col>
     </v-row>
 
