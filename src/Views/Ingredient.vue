@@ -223,6 +223,7 @@ export default {
           ).finally(() => {
             this.messageDialog = true;
             this.deleteDialog = false;
+            this.getItems();
           }
       )
     },
