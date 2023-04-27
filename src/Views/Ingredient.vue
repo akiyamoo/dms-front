@@ -2,6 +2,53 @@
   <v-container grid-list-md text-xs-center>
     <div class="text-center">
       <v-dialog
+          v-model="deleteDialog"
+          width="30vw"
+      >
+        <v-card>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <span class="text-md-h6 font-weight-bold">Удаление ингредиента</span>
+            <v-spacer></v-spacer>
+          </v-card-title>
+          <v-container grid-list-md>
+            <v-row justify="center">
+              <v-card-text style="font-size: 18px" align="center">Вы уверены?</v-card-text>
+            </v-row>
+          </v-container>
+
+          <v-card-actions class="justify-center">
+            <v-btn color="primary" @click="deleteConfirm">Да</v-btn>
+            <v-btn color="primary" @click="deleteDialog = false">Нет,закрыть окно</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+    <div class="text-center">
+      <v-dialog
+          v-model="messageDialog"
+          width="30vw"
+      >
+        <v-card>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <span class="text-md-h6 font-weight-bold">Диалоговое окно</span>
+            <v-spacer></v-spacer>
+          </v-card-title>
+          <v-container grid-list-md>
+            <v-row justify="center">
+              <v-card-text style="font-size: 18px" align="center">{{ message }}</v-card-text>
+            </v-row>
+          </v-container>
+
+          <v-card-actions class="justify-center">
+            <v-btn color="primary" @click="messageDialog = false">Закрыть</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+    <div class="text-center">
+      <v-dialog
           v-model="dialog"
           width="30vw"
       >
@@ -33,7 +80,7 @@
           </v-container>
 
           <v-card-actions class="justify-end">
-            <v-btn color="primary" @click="saveSupply()">Сохранить</v-btn>
+            <v-btn color="primary" @click="saveIngredient()">Сохранить</v-btn>
             <v-btn color="primary" @click="dialog = false">Отменить</v-btn>
           </v-card-actions>
         </v-card>
@@ -54,17 +101,17 @@
             :items="products"
             item-text="name"
             item-value="id"
-            label="Выберите сырье"
+            label="Выберите продукты"
             return-object
             solo
             dense
             @change="selected()"
         ></v-select>
-        <v-btn @click="getProducts()">Обновить продукты</v-btn>
+        <!--        <v-btn @click="getProducts()">Обновить продукты</v-btn>-->
       </v-col>
       <v-col class="d-flex justify-end">
-        <v-btn class="mr-5" @click="createItem()">Создать</v-btn>
-        <v-btn :disabled="items.length === 0" @click="getItems(); getSupplies();">Обновить ингредиенты</v-btn>
+        <v-btn class="mr-5" :disabled="selectedProduct === undefined" @click="createItem()">Создать</v-btn>
+        <!--        <v-btn :disabled="items.length === 0" @click="getItems(); getSupplies();">Обновить ингредиенты</v-btn>-->
       </v-col>
     </v-row>
 
@@ -89,11 +136,14 @@
           <template v-slot:body="{ items }">
             <tbody>
             <tr v-for="item in items" :key="item.id">
-              <td align="center">{{ item.supplyName }}</td>
+              <td align="center">{{ item.supply }}</td>
               <td align="center">{{ item.amount }}</td>
               <td align="center">
-                <v-btn small @click="editItem(item)">
+                <v-btn class="mr-5" small @click="editItem(item)">
                   <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn small @click="deleteItem(item)">
+                  <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </td>
             </tr>
@@ -106,6 +156,8 @@
 </template>
 
 <script>
+import api from '@/plugins/axios'
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Ingredient",
@@ -122,74 +174,112 @@ export default {
         {text: "Количество", value: "amount", sort: true, align: "center"},
         {text: "Действия", value: "action", sort: true, align: "center"},
       ],
-      items: [
-        // TODO
-      ],
+      items: [],
       search: undefined,
       dialog: false,
+      messageDialog: false,
       item: {
         id: undefined,
-        supplyName: undefined,
+        supply: undefined,
         supplyId: undefined,
         name: undefined,
         amount: undefined,
         sum: undefined,
         productId: undefined,
-        productName: undefined,
+        product: undefined,
       },
       products: [],
       supplies: [],
-      selectedProduct: undefined
+      selectedProduct: undefined,
+      isCreate: false,
+      message: undefined,
+      deletedItem: undefined,
+      deleteDialog: false
     }
   },
   methods: {
     createItem() {
       this.dialog = true;
+      this.isCreate = true
       for (let key of Object.keys(this.item)) {
         this.item[key] = undefined
       }
     },
     editItem(itemOriginal) {
       this.dialog = true;
+      this.isCreate = false
       for (let key of Object.keys(this.item)) {
         this.item[key] = itemOriginal[key]
       }
     },
-    saveSupply() {
-      // TODO
-      this.dialog = false;
+    deleteItem(itemOriginal) {
+      this.deleteDialog = true;
+      this.deletedItem = itemOriginal.id
+    },
+    deleteConfirm() {
+      api.post("/api/ingredient/delete/" + this.deletedItem)
+          .then(
+              r => this.message = r.data
+          ).finally(() => {
+            this.messageDialog = true;
+            this.deleteDialog = false;
+          }
+      )
+    },
+    saveIngredient() {
+      if (this.isCreate) {
+        this.item.productId = this.selectedProduct.id
+        api.post("/api/ingredient/add", this.item)
+            .then(r => {
+              this.message = r.data
+            }).finally(
+            () => {
+              this.dialog = false
+              this.messageDialog = true
+              this.getItems();
+            }
+        )
+      } else {
+        api.post("/api/ingredient/update", this.item)
+            .then(r => {
+              this.message = r.data
+            }).finally(
+            () => {
+              this.dialog = false
+              this.messageDialog = true
+              this.getItems();
+            }
+        )
+      }
     },
     getItems() {
-      // TODO
-      this.items = [
-        {
-          id: 1,
-          supplyName: "Рыба",
-          supplyId: 2,
-          amount: 1000,
-          productName: 'Жаренная рыба',
-          productId: 1
-        }
-      ]
+      if (this.selectedProduct !== undefined && this.selectedProduct.id !== undefined)
+        api.get("/api/ingredient/all/" + this.selectedProduct.id).then(
+            response => {
+              console.log(response)
+              this.items = response.data
+            }
+        )
     },
     getProducts() {
-      // TODO
-      this.products = [
-        {id: 1, name: 'Жаренная рыба'},
-        {id: 2, name: 'Сгущенка'}
-      ]
+      api.get("/api/product/all").then(
+          response => {
+            console.log(response)
+            this.products = response.data
+          }
+      )
     },
     getSupplies() {
-      this.supplies = [
-        {id: 1, name: "Молоко"},
-        {id: 2, name: "Рыба"},
-      ]
+      api.get("/api/supply/all").then(
+          response => {
+            console.log(response)
+            this.supplies = response.data
+          }
+      )
     },
     selected() {
-      // TODO
       this.getItems();
       this.getSupplies();
-      console.log(this.selectedProduct)
     }
   }
 }
