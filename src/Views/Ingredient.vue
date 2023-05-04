@@ -221,7 +221,6 @@ export default {
           .then(
               r => this.message = r.data
           ).finally(() => {
-            this.messageDialog = true;
             this.deleteDialog = false;
             this.getItems();
           }
@@ -235,8 +234,12 @@ export default {
               this.message = r.data
             }).finally(
             () => {
-              this.dialog = false
-              this.messageDialog = true
+              if (this.message !== undefined && this.message !== '') {
+                this.messageDialog = true
+              }
+              if (this.message !== undefined && this.message === '') {
+                this.dialog = true
+              }
               this.getItems();
             }
         )
@@ -246,8 +249,11 @@ export default {
               this.message = r.data
             }).finally(
             () => {
+              if (this.message !== undefined && this.message !== '') {
+                this.messageDialog = true
+              }
               this.dialog = false
-              this.messageDialog = true
+
               this.getItems();
             }
         )

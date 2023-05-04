@@ -5,11 +5,11 @@
         color="primary"
         dark
     >
-      <v-btn @click="$router.push('/budget')" small>
+      <v-btn :disabled="true" @click="$router.push('/budget')" small>
         Бюджет
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn @click="$router.push('/staff')" small>
+      <v-btn :disabled="true" @click="$router.push('/staff')" small>
         Должности
       </v-btn>
       <v-spacer></v-spacer>
@@ -17,7 +17,7 @@
         Сотрудники
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn @click="$router.push('/measurment')" small>
+      <v-btn :disabled="false" @click="$router.push('/measurment')" small>
         Единицы измерения
       </v-btn>
       <v-spacer></v-spacer>
@@ -25,11 +25,11 @@
         Ингредиенты
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn @click="$router.push('/supply')" small>
+      <v-btn :disabled="true" @click="$router.push('/supply')" small>
         Сырьё
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn @click="$router.push('/purchase-of-supply')" small>
+      <v-btn :disabled="true" @click="$router.push('/purchase-of-supply')" small>
         Закупка сырья
       </v-btn>
       <v-spacer></v-spacer>
@@ -37,11 +37,11 @@
         Готовая продукция
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn @click="$router.push('/production-of-product')" small>
+      <v-btn :disabled="true" @click="$router.push('/production-of-product')" small>
         Производство продукции
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn @click="$router.push('/sale-of-product')" small>
+      <v-btn :disabled="true" @click="$router.push('/sale-of-product')" small>
         Продажа продукции
       </v-btn>
       <v-spacer></v-spacer>
