@@ -25,7 +25,7 @@
         Ингредиенты
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn :disabled="true" @click="$router.push('/supply')" small>
+      <v-btn :disabled="false" @click="$router.push('/supply')" small>
         Сырьё
       </v-btn>
       <v-spacer></v-spacer>
