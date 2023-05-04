@@ -9,7 +9,7 @@
         Бюджет
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn :disabled="true" @click="$router.push('/staff')" small>
+      <v-btn :disabled="false" @click="$router.push('/staff')" small>
         Должности
       </v-btn>
       <v-spacer></v-spacer>

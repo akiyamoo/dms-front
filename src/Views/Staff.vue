@@ -71,6 +71,8 @@
 </template>
 
 <script>
+import api from "@/plugins/axios";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Staff",
@@ -97,26 +99,71 @@ export default {
   methods: {
     createItem() {
       this.dialog = true;
+      this.isCreate = true;
       for (let key of Object.keys(this.item)) {
         this.item[key] = undefined
       }
     },
     editItem(itemOriginal) {
       this.dialog = true;
+      this.isCreate = false;
       for (let key of Object.keys(this.item)) {
         this.item[key] = itemOriginal[key]
       }
     },
+    deleteItem(itemOriginal) {
+      this.deleteDialog = true;
+      this.deletedItem = itemOriginal.id
+    },
+    deleteConfirm() {
+      api.post("/api/position/delete/" + this.deletedItem)
+          .then(
+              r => this.message = r.data
+          ).finally(() => {
+            if (this.message !== undefined && this.message !== '') {
+              this.messageDialog = true
+            }
+            this.deleteDialog = false;
+            this.getItems();
+          }
+      )
+    },
     saveStaff() {
-      // TODO
-      this.dialog = false;
+      if (this.isCreate) {
+        api.post("/api/position/add", this.item)
+            .then(r => {
+              this.message = r.data
+            }).finally(
+            () => {
+              this.dialog = false
+              if (this.message !== undefined && this.message !== '') {
+                this.messageDialog = true
+              }
+              this.getItems();
+            }
+        )
+      } else {
+        api.post("/api/position/update", this.item)
+            .then(r => {
+              this.message = r.data
+            }).finally(
+            () => {
+              this.dialog = false
+              if (this.message !== undefined && this.message !== '') {
+                this.messageDialog = true
+              }
+              this.getItems();
+            }
+        )
+      }
     },
     getItems() {
-      // TODO
-      this.items = [
-        {id: "1", name: "Admin"},
-        {id: "2", name: "User"},
-      ]
+      api.get("/api/position/all").then(
+          response => {
+            console.log(response)
+            this.items = response.data
+          }
+      )
     },
   }
 }
