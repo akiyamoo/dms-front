@@ -5,7 +5,7 @@
         color="primary"
         dark
     >
-      <v-btn :disabled="true" @click="$router.push('/budget')" small>
+      <v-btn :disabled="false" @click="$router.push('/budget')" small>
         Бюджет
       </v-btn>
       <v-spacer></v-spacer>
