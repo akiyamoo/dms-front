@@ -55,7 +55,7 @@
 
         <v-row class="justify-end">
             <v-btn class="mr-5" @click="editItem(items[0])">Редактировать</v-btn>
-            <v-btn @click="getItems()">Обновить</v-btn>
+<!--            <v-btn @click="getItems()">Обновить</v-btn>-->
         </v-row>
 
         <v-row>

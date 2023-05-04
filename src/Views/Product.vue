@@ -112,7 +112,7 @@
 
     <v-row class="justify-end">
       <v-btn class="mr-5" @click="createItem()">Создать</v-btn>
-      <v-btn @click="getItems()">Обновить</v-btn>
+<!--      <v-btn @click="getItems()">Обновить</v-btn>-->
     </v-row>
 
     <v-row>
