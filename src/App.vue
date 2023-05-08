@@ -29,7 +29,7 @@
         Сырьё
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn :disabled="true" @click="$router.push('/purchase-of-supply')" small>
+      <v-btn :disabled="false" @click="$router.push('/purchase-of-supply')" small>
         Закупка сырья
       </v-btn>
       <v-spacer></v-spacer>
