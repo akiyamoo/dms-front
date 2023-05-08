@@ -1,5 +1,55 @@
 <template>
   <v-container grid-list-md text-xs-center>
+
+    <div class="text-center">
+      <v-dialog
+          v-model="deleteDialog"
+          width="30vw"
+      >
+        <v-card>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <span class="text-md-h6 font-weight-bold">Удаление ингредиента</span>
+            <v-spacer></v-spacer>
+          </v-card-title>
+          <v-container grid-list-md>
+            <v-row justify="center">
+              <v-card-text style="font-size: 18px" align="center">Вы уверены?</v-card-text>
+            </v-row>
+          </v-container>
+
+          <v-card-actions class="justify-center">
+            <v-btn color="primary" @click="deleteConfirm">Да</v-btn>
+            <v-btn color="primary" @click="deleteDialog = false">Нет,закрыть окно</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+
+    <div class="text-center">
+      <v-dialog
+          v-model="messageDialog"
+          width="30vw"
+      >
+        <v-card>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <span class="text-md-h6 font-weight-bold">Диалоговое окно</span>
+            <v-spacer></v-spacer>
+          </v-card-title>
+          <v-container grid-list-md>
+            <v-row justify="center">
+              <v-card-text style="font-size: 18px" align="center">{{ message }}</v-card-text>
+            </v-row>
+          </v-container>
+
+          <v-card-actions class="justify-center">
+            <v-btn color="primary" @click="messageDialog = false">Закрыть</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+
     <div class="text-center">
       <v-dialog
           v-model="dialog"
@@ -22,9 +72,9 @@
                     label="Выберите продукт"
                 ></v-select>
                 <v-select
-                    v-model="item.employeeId"
-                    :items="employees"
-                    item-text="name"
+                    v-model="item.staffId"
+                    :items="staffes"
+                    item-text="fio"
                     item-value="id"
                     label="Выберите сотрудника"
                 ></v-select>
@@ -35,13 +85,12 @@
                     clearable
                 >
                 </v-text-field>
-                <v-text-field
-                    align="center"
-                    v-model="item.createdDate"
-                    label="Дата производства"
-                    clearable
+                <datetime-picker
+                    v-if="!isCreate"
+                    :value="item.createdDate"
+                    @input="(val) => item.createdDate = val"
                 >
-                </v-text-field>
+                </datetime-picker>
               </v-col>
             </v-row>
           </v-container>
@@ -86,13 +135,16 @@
           <template v-slot:body="{ items }">
             <tbody>
             <tr v-for="item in items" :key="item.id">
-              <td align="center">{{ item.productName }}</td>
-              <td align="center">{{ item.employeeName }}</td>
+              <td align="center">{{ item.product }}</td>
+              <td align="center">{{ item.staff }}</td>
               <td align="center">{{ item.amount }}</td>
               <td align="center">{{ item.createdDate }}</td>
               <td align="center">
-                <v-btn small @click="editItem(item)">
+                <v-btn small class="mr-5" @click="editItem(item)">
                   <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn small @click="deleteItem(item)">
+                  <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </td>
             </tr>
@@ -105,8 +157,12 @@
 </template>
 
 <script>
+import api from "@/plugins/axios";
+import DatetimePicker from "@/components/datetime-picker";
+
 export default {
   name: "ProductionOfProduct",
+  components: {DatetimePicker},
   mounted() {
     this.getItems();
     this.getProducts();
@@ -116,15 +172,13 @@ export default {
     return {
       headers: [
         //{text: "ID", value: "id", sort: true, align: "center"},
-        {text: "Название продукции", value: "productName", sort: true, align: "center"},
-        {text: "ФИО сотрудника", value: "employeeName", sort: true, align: "center"},
+        {text: "Название продукции", value: "product", sort: true, align: "center"},
+        {text: "ФИО сотрудника", value: "staff", sort: true, align: "center"},
         {text: "Количество", value: "amount", sort: true, align: "center"},
         {text: "Дата производства", value: "createdDate", sort: true, align: "center"},
         {text: "Действия", value: "action", sort: true, align: "center"}
       ],
-      items: [
-        // TODO
-      ],
+      items: [],
       search: undefined,
       dialog: false,
       item: {
@@ -133,58 +187,110 @@ export default {
         productId: undefined,
         amount: undefined,
         createdDate: undefined,
-        employeeName: undefined,
-        employeeId: undefined,
+        staff: undefined,
+        staffId: undefined,
       },
       products: [],
-      employees: [],
+      staffes: [],
+      isCreate: false,
+      message: undefined,
+      deletedItem: undefined,
+      deleteDialog: false,
+      messageDialog: false,
+      menu: false,
     }
   },
   methods: {
     createItem() {
       this.dialog = true;
+      this.isCreate = true;
       for (let key of Object.keys(this.item)) {
         this.item[key] = undefined
       }
     },
     editItem(itemOriginal) {
       this.dialog = true;
+      this.isCreate = false;
       for (let key of Object.keys(this.item)) {
         this.item[key] = itemOriginal[key]
       }
     },
+    deleteItem(itemOriginal) {
+      this.deleteDialog = true;
+      this.deletedItem = itemOriginal.id
+    },
+    deleteConfirm() {
+      api.post("/api/production-of-product/delete/" + this.deletedItem)
+          .then(
+              r => this.message = r.data
+          ).catch(
+          r => {
+            console.log(r)
+            this.messageDialog = true
+            this.message = r
+          }
+      ).finally(() => {
+            if (this.message !== undefined && this.message !== '') {
+              this.messageDialog = true
+            }
+            this.deleteDialog = false;
+            this.getItems();
+          }
+      )
+    },
     saveProductionOfProduct() {
-      // TODO
-      this.dialog = false;
+      if (this.isCreate) {
+        api.post("/api/production-of-product/add", this.item)
+            .then(r => {
+              this.message = r.data
+            }).finally(
+            () => {
+              this.dialog = false
+              if (this.message !== undefined && this.message !== '') {
+                this.messageDialog = true
+              }
+              this.getItems();
+            }
+        )
+      } else {
+        api.post("/api/production-of-product/update", this.item)
+            .then(r => {
+              this.message = r.data
+            }).finally(
+            () => {
+              this.dialog = false
+              if (this.message !== undefined && this.message !== '') {
+                this.messageDialog = true
+              }
+              this.getItems();
+            }
+        )
+      }
     },
     getItems() {
-      // TODO
-      this.items = [
-        {
-          id: 1,
-          productName: "Жаренная рыба",
-          productId: 1,
-          amount: 1000,
-          sum: 2000,
-          createdDate: Date.now(),
-          employeeName: 'Eldar',
-          employeeId: 1
-        }
-      ]
+      api.get("/api/production-of-product/all").then(
+          response => {
+            console.log(response)
+            this.items = response.data
+          }
+      )
+
     },
     getProducts() {
-      // TODO
-      this.products = [
-        {id: 1, name: 'Жаренная рыба'},
-        {id: 2, name: 'Сгущёнка'}
-      ]
+      api.get("/api/product/all").then(
+          response => {
+            console.log(response)
+            this.products = response.data
+          }
+      )
     },
     getEmployees() {
-      // TODO
-      this.employees = [
-        {id: 1, name: 'Eldar'},
-        {id: 2, name: 'Aizat'}
-      ]
+      api.get("/api/staff/all").then(
+          response => {
+            console.log(response)
+            this.staffes = response.data
+          }
+      )
     }
   }
 }

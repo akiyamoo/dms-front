@@ -94,6 +94,7 @@
                 >
                 </v-text-field>
                 <datetime-picker
+                    v-if="!isCreate"
                     :value="item.createdDate"
                     @input="(val) => item.createdDate = val"
                 >

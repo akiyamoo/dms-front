@@ -37,7 +37,7 @@
         Готовая продукция
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn :disabled="true" @click="$router.push('/production-of-product')" small>
+      <v-btn :disabled="false" @click="$router.push('/production-of-product')" small>
         Производство продукции
       </v-btn>
       <v-spacer></v-spacer>
