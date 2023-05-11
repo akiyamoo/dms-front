@@ -8,7 +8,7 @@
         <v-card>
           <v-card-title>
             <v-spacer></v-spacer>
-            <span class="text-md-h6 font-weight-bold">Форма бюджета</span>
+            <span class="text-md-h6 font-weight-bold">Форма</span>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-container grid-list-md>

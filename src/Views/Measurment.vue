@@ -58,7 +58,7 @@
         <v-card>
           <v-card-title>
             <v-spacer></v-spacer>
-            <span class="text-md-h5 font-weight-bold">Форма единиц измерений</span>
+            <span class="text-md-h5 font-weight-bold">Форма</span>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-container grid-list-md>

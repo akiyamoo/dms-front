@@ -55,7 +55,7 @@
         <v-card>
           <v-card-title>
             <v-spacer></v-spacer>
-            <span class="text-md-h6 font-weight-bold">Форма ингредиента</span>
+            <span class="text-md-h6 font-weight-bold">Форма</span>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-container grid-list-md>
@@ -238,7 +238,7 @@ export default {
                 this.messageDialog = true
               }
               if (this.message !== undefined && this.message === '') {
-                this.dialog = true
+                this.dialog = false
               }
               this.getItems();
             }
