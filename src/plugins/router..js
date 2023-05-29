@@ -59,6 +59,11 @@ const paths = [
         path: "/salary",
         component: () => import('@/Views/Salary')
     },
+    {
+        name: "Bank",
+        path: "/bank",
+        component: () => import('@/Views/Bank')
+    },
 ]
 
 const router = new VueRouter({
