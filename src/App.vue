@@ -49,6 +49,10 @@
         Зарплата
       </v-btn>
       <v-spacer></v-spacer>
+      <v-btn :disabled="false" @click="$router.push('/bank')" small>
+        Банк
+      </v-btn>
+      <v-spacer></v-spacer>
     </v-app-bar>
     <v-main>
       <router-view></router-view>
