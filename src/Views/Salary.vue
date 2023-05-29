@@ -55,23 +55,16 @@
         <v-card>
           <v-card-title>
             <v-spacer></v-spacer>
-            <span class="text-md-h6 font-weight-bold">Форма ингредиента</span>
+            <span class="text-md-h6 font-weight-bold">Форма</span>
             <v-spacer></v-spacer>
           </v-card-title>
           <v-container grid-list-md>
             <v-row justify="center">
               <v-col md="10">
-                <v-select
-                    v-model="item.supplyId"
-                    :items="supplies"
-                    item-text="name"
-                    item-value="id"
-                    label="Выберите сырье"
-                ></v-select>
                 <v-text-field
                     align="center"
-                    v-model="item.amount"
-                    label="Количество"
+                    v-model="item.sumSalary"
+                    label="Сумма выдачи"
                     clearable
                 >
                 </v-text-field>
@@ -89,7 +82,7 @@
 
     <v-row>
       <v-col md12>
-        <v-card-text align="center" class="text-h4 font-weight-bold">Ингредиенты</v-card-text>
+        <v-card-text align="center" class="text-h4 font-weight-bold">Зарплата</v-card-text>
       </v-col>
     </v-row>
 
@@ -97,12 +90,18 @@
       <v-col class="d-flex justify-start" cols="5">
         <v-select
             class="caption mr-3"
-            v-model="selectedProduct"
-            :items="products"
-            item-text="name"
-            item-value="id"
-            label="Выберите продукты"
-            return-object
+            v-model="selectedYear"
+            :items="years"
+            label="Выберите год"
+            solo
+            dense
+            @change="selected()"
+        ></v-select>
+        <v-select
+            class="caption mr-3"
+            v-model="selectedMonth"
+            :items="month"
+            label="Выберите месяц"
             solo
             dense
             @change="selected()"
@@ -110,7 +109,13 @@
         <!--        <v-btn @click="getProducts()">Обновить продукты</v-btn>-->
       </v-col>
       <v-col class="d-flex justify-end">
-        <v-btn class="mr-5" :disabled="selectedProduct === undefined" @click="createItem()">Создать</v-btn>
+        <v-card-text
+            align="center"
+            class="font-weight-bold"
+        >
+          {{"Общая сумма выдачи: " + sum}}
+        </v-card-text>
+        <v-btn class="mr-5" @click="issue()">Выдать зарплату</v-btn>
         <!--        <v-btn :disabled="items.length === 0" @click="getItems(); getSupplies();">Обновить ингредиенты</v-btn>-->
       </v-col>
     </v-row>
@@ -136,14 +141,18 @@
           <template v-slot:body="{ items }">
             <tbody>
             <tr v-for="item in items" :key="item.id">
-              <td align="center">{{ item.supply }}</td>
-              <td align="center">{{ item.amount }}</td>
+              <td align="center">{{ item.staff }}</td>
+              <td align="center">{{ item.sumSalary }}</td>
+              <td align="center">{{ item.purchaseCount }}</td>
+              <td align="center">{{ item.productionCount }}</td>
+              <td align="center">{{ item.saleCount }}</td>
+              <td align="center">{{ item.sumCount }}</td>
+              <td align="center">{{ item.bonus }}</td>
+              <td align="center">{{ item.salary }}</td>
+              <td align="center">{{ item.isIssued }}</td>
               <td align="center">
-                <v-btn class="mr-5" small @click="editItem(item)">
+                <v-btn v-if="item.isIssued === 'Не выдано'" class="mr-5" small @click="editItem(item)">
                   <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn small @click="deleteItem(item)">
-                  <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </td>
             </tr>
@@ -163,38 +172,69 @@ export default {
   name: "Salary",
   mounted() {
     this.getItems();
-    this.getProducts();
-    this.getSupplies();
   },
   data() {
     return {
       headers: [
         //{text: "ID", value: "id", sort: true, align: "center"},
-        {text: "Название сырья", value: "name", sort: true, align: "center"},
-        {text: "Количество", value: "amount", sort: true, align: "center"},
-        {text: "Действия", value: "action", sort: true, align: "center"},
+        {text: "Сотрудник", value: "staff", sort: true, align: "center"},
+        {text: "Общая сумма выплаты", value: "sumSalary", sort: true, align: "center"},
+        {text: "Количество закупок", value: "purchaseCount", sort: true, align: "center"},
+        {text: "Количество производств", value: "productionCount", sort: true, align: "center"},
+        {text: "Количество продаж", value: "saleCount", sort: true, align: "center"},
+        {text: "Общее количество", value: "sumCount", sort: true, align: "center"},
+        {text: "Бонус", value: "bonus", sort: true, align: "center"},
+        {text: "Оклад", value: "salary", sort: true, align: "center"},
+        {text: "Выдана ли зарплата", value: "isIssued", sort: true, align: "center"},
       ],
       items: [],
       search: undefined,
       dialog: false,
       messageDialog: false,
       item: {
-        id: undefined,
-        supply: undefined,
-        supplyId: undefined,
-        name: undefined,
-        amount: undefined,
-        sum: undefined,
-        productId: undefined,
-        product: undefined,
+        staffId: undefined,
+        staff: undefined,
+        sumSalary: undefined,
+        purchaseCount: undefined,
+        productionCount: undefined,
+        saleCount: undefined,
+        sumCount: undefined,
+        bonus: undefined,
+        year: undefined,
+        month: undefined,
+        isIssued: undefined
       },
-      products: [],
+      years: [
+        2023,
+        2022,
+        2021,
+        2020,
+        2019,
+        2018,
+        2017,
+        2016,
+        2015,
+      ],
+      month: [
+        'Январь',
+        'Февраль',
+        'Март',
+        'Май',
+        'Июнь',
+        'Июль',
+        'Сентябрь',
+        'Октябрь',
+        'Ноябрь',
+        'Декабрь'
+      ],
       supplies: [],
-      selectedProduct: undefined,
+      selectedYear: 2023,
+      selectedMonth: 'Май',
       isCreate: false,
       message: undefined,
       deletedItem: undefined,
-      deleteDialog: false
+      deleteDialog: false,
+      sum: 0
     }
   },
   methods: {
@@ -212,81 +252,59 @@ export default {
         this.item[key] = itemOriginal[key]
       }
     },
-    deleteItem(itemOriginal) {
-      this.deleteDialog = true;
-      this.deletedItem = itemOriginal.id
-    },
-    deleteConfirm() {
-      api.post("/api/ingredient/delete/" + this.deletedItem)
-          .then(
-              r => this.message = r.data
-          ).finally(() => {
-            this.deleteDialog = false;
+    saveIngredient() {
+      // TODO
+      api.post("/api/salary/update/" + this.selectedYear + "/" + this.selectedMonth + "/" + this.item.staffId + "/" + this.item.sumSalary)
+          .then(r => {
+            this.message = r.data
+          }).finally(
+          () => {
+            if (this.message !== undefined && this.message !== '') {
+              this.messageDialog = true
+            }
+            if (this.message !== undefined && this.message === '') {
+              this.dialog = false
+            }
             this.getItems();
           }
       )
     },
-    saveIngredient() {
-      if (this.isCreate) {
-        this.item.productId = this.selectedProduct.id
-        api.post("/api/ingredient/add", this.item)
-            .then(r => {
-              this.message = r.data
-            }).finally(
-            () => {
-              if (this.message !== undefined && this.message !== '') {
-                this.messageDialog = true
-              }
-              if (this.message !== undefined && this.message === '') {
-                this.dialog = true
-              }
-              this.getItems();
+    issue() {
+      api.post("/api/salary/issue/" + this.selectedYear + "/" + this.selectedMonth)
+          .then(r => {
+            this.message = r.data
+          }).finally(
+          () => {
+            if (this.message !== undefined && this.message !== '') {
+              this.messageDialog = true
             }
-        )
-      } else {
-        api.post("/api/ingredient/update", this.item)
-            .then(r => {
-              this.message = r.data
-            }).finally(
-            () => {
-              if (this.message !== undefined && this.message !== '') {
-                this.messageDialog = true
-              }
+            if (this.message !== undefined && this.message === '') {
               this.dialog = false
-
-              this.getItems();
             }
-        )
-      }
-    },
-    getItems() {
-      if (this.selectedProduct !== undefined && this.selectedProduct.id !== undefined)
-        api.get("/api/ingredient/all/" + this.selectedProduct.id).then(
-            response => {
-              console.log(response)
-              this.items = response.data
-            }
-        )
-    },
-    getProducts() {
-      api.get("/api/product/all").then(
-          response => {
-            console.log(response)
-            this.products = response.data
+            this.getItems();
           }
       )
     },
-    getSupplies() {
-      api.get("/api/supply/all").then(
+    getItems() {
+      api.post("/api/salary/all/" + this.selectedYear + "/" + this.selectedMonth).then(
           response => {
             console.log(response)
-            this.supplies = response.data
+            this.items = response.data
+          }
+      )
+      this.getSum()
+    },
+    getSum() {
+      api.post("/api/salary/sum/" + this.selectedYear + "/" + this.selectedMonth).then(
+          response => {
+            console.log(response)
+            this.sum = response.data
+            if (this.sum === undefined) this.sum = 0
           }
       )
     },
     selected() {
       this.getItems();
-      this.getSupplies();
     }
   }
 }
